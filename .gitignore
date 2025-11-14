@@ -1,0 +1,62 @@
+# Node / Backend
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+package-lock.json
+.pnpm-store/
+
+# Environment variables
+.env
+.env.*.local
+
+# Logs
+logs/
+*.log
+*.log.*
+debug.log
+
+# Build output
+dist/
+build/
+.out/
+.cache/
+.temp/
+
+# Uploaded files
+uploads/
+tmp/
+storage/
+files/
+
+# React / Vite Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+frontend/.vite/
+frontend/.cache/
+
+# Env files
+frontend/.env
+frontend/.env.*.local
+
+# JetBrains / VS Code
+.idea/
+*.iml
+.vscode/
+*.code-workspace
+
+# OS-specific
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Figma / Design exports
+*.fig
+exports/
+
+# Misc
+*.swp
+*.swo
+*.tmp
