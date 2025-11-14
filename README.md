@@ -4,5 +4,5 @@ A simple MERN-based platform for hosting and managing hackathons, featuring user
 
 ## License
 
-This project is released under the **[CC0-1.0](./LICENSE)**.  
-You may copy, modify, and share this project freely, **but it may not be used for any commercial purpose without explicit written permission from the project owners**.
+This project is released under **All Rights Reserved**.  
+You may view and learn from this project, but **you may not use, modify, distribute, or apply it for any commercial purpose without explicit written permission from the owner (Divyesh Mangla)**.
