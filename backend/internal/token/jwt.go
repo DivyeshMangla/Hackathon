@@ -1,28 +1,27 @@
 package token
 
 import (
+	"time"
+
 	"github.com/divyeshmangla/hackathon/internal/config"
 	"github.com/golang-jwt/jwt/v5"
-	"time"
 )
-
-var secret = []byte(config.C.JWTSecret)
 
 // Generate generates a JWT token for the given user ID.
 func Generate(userID string) (string, error) {
 	claims := jwt.MapClaims{
 		"user_id": userID,
-		"exp":     time.Now().Add(time.Hour * 24).Unix(), // 1-D expiry
-		"at":      time.Now().Unix(),
+		"exp":     time.Now().Add(24 * time.Hour).Unix(),
+		"iat":     time.Now().Unix(),
 	}
 
 	t := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	return t.SignedString(secret)
+	return t.SignedString([]byte(config.C.JWTSecret))
 }
 
 func Verify(tokenStr string) (string, error) {
 	token, err := jwt.Parse(tokenStr, func(token *jwt.Token) (interface{}, error) {
-		return secret, nil
+		return []byte(config.C.JWTSecret), nil
 	})
 
 	if err != nil || !token.Valid {
@@ -30,11 +29,12 @@ func Verify(tokenStr string) (string, error) {
 	}
 
 	claims := token.Claims.(jwt.MapClaims)
-	userId, ok := claims["user_id"].(string)
+
+	userID, ok := claims["user_id"].(string)
 
 	if !ok {
 		return "", jwt.ErrInvalidKey
 	}
 
-	return userId, nil
+	return userID, nil
 }
