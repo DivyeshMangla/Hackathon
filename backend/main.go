@@ -46,6 +46,6 @@ func main() {
 	auth.Get("/me", middleware.Auth(), handlers.Me)
 
 	// Start server
-	log.Println("Server starting on :8080")
-	log.Fatal(app.Listen(":8080"))
+	log.Printf("Server starting on port %s", config.C.Port)
+	log.Fatal(app.Listen(":" + config.C.Port))
 }

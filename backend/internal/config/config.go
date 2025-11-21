@@ -10,6 +10,7 @@ import (
 type Config struct {
 	JWTSecret   string
 	DatabaseURL string
+	Port        string
 }
 
 var C Config // global config (read-only after Load)
@@ -22,6 +23,7 @@ func Load() {
 	C = Config{
 		JWTSecret:   getEnv("JWT_SECRET"),
 		DatabaseURL: getEnv("DATABASE_URL"),
+		Port:        getEnvOrDefault("PORT", "8080"),
 	}
 
 	log.Println("[config] configuration loaded successfully")
