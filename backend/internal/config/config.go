@@ -8,10 +8,11 @@ import (
 )
 
 type Config struct {
-	JWTSecret string
+	JWTSecret   string
+	DatabaseURL string
 }
 
-var C Config // global config
+var C Config // global config (read-only after Load)
 
 func Load() {
 	if err := godotenv.Load(); err != nil {
@@ -19,7 +20,8 @@ func Load() {
 	}
 
 	C = Config{
-		JWTSecret: getEnv("JWT_SECRET"),
+		JWTSecret:   getEnv("JWT_SECRET"),
+		DatabaseURL: getEnv("DATABASE_URL"),
 	}
 
 	log.Println("[config] configuration loaded successfully")
