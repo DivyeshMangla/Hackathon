@@ -1,6 +1,6 @@
 # Hackathon – MERN Hackathon Platform
 
-A simple MERN-based platform for hosting and managing hackathons, featuring user registration, team creation, project submissions, judging, announcements, and event coordination. Built for educational and learning use.
+A simple platform for hosting and managing hackathons, featuring user registration, team creation, project submissions, judging, announcements, and event coordination. Built for educational and learning use.
 
 ## License
 
