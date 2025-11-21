@@ -1,12 +1,12 @@
 package token
 
 import (
+	"github.com/divyeshmangla/hackathon/internal/config"
 	"github.com/golang-jwt/jwt/v5"
 	"time"
 )
 
-// TODO: replace with env variable.
-var secret = []byte("SECRET_KEY")
+var secret = []byte(config.C.JWTSecret)
 
 // Generate generates a JWT token for the given user ID.
 func Generate(userID string) (string, error) {
