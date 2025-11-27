@@ -46,3 +46,5 @@ const TeamSchema: Schema<ITeam> = new Schema<ITeam>(
         }
     }
 );
+
+export default mongoose.model<ITeam>("Team", TeamSchema);

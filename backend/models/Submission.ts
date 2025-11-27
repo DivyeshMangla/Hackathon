@@ -64,3 +64,5 @@ const submissionSchema: Schema = new Schema<ISubmission>({
         default: "pending"
     }
 })
+
+export default mongoose.model<ISubmission>("Submission", submissionSchema);

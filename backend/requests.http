@@ -1,20 +1,102 @@
-### Signup
+# @name signup_leader
 POST http://localhost:5000/auth/signup
 Content-Type: application/json
 
 {
-  "name": "Test User",
-  "email": "test@example.com",
-  "password": "123456",
-  "rollNumber": "A001",
-  "year": 1
+  "name": "Leader User",
+  "email": "leader@example.com",
+  "password": "password123",
+  "rollNumber": "L001",
+  "year": 3
 }
 
-### Login
+### Login Leader
+# @name login_leader
 POST http://localhost:5000/auth/login
 Content-Type: application/json
 
 {
-  "email": "test@example.com",
-  "password": "123456"
+  "email": "leader@example.com",
+  "password": "password123"
+}
+
+> {%
+    client.global.set("authTokenA", response.body.token);
+    client.global.set("leaderId", response.body.user._id);
+%}
+
+### Signup Member
+# @name signup_member
+POST http://localhost:5000/auth/signup
+Content-Type: application/json
+
+{
+  "name": "Member User",
+  "email": "member@example.com",
+  "password": "password123",
+  "rollNumber": "M001",
+  "year": 2
+}
+
+### Login Member
+# @name login_member
+POST http://localhost:5000/auth/login
+Content-Type: application/json
+
+{
+  "email": "member@example.com",
+  "password": "password123"
+}
+
+> {%
+    client.global.set("authTokenB", response.body.token);
+    client.global.set("memberId", response.body.user._id);
+%}
+
+### Create Team (Leader)
+POST http://localhost:5000/teams/createTeam
+Content-Type: application/json
+Authorization: Bearer {{authTokenA}}
+
+{
+  "teamName": "Hackathon Winners"
+}
+
+### Invite Member (Leader)
+POST http://localhost:5000/teams/inviteUser
+Content-Type: application/json
+Authorization: Bearer {{authTokenA}}
+
+{
+  "toUserId": "{{memberId}}"
+}
+
+### Get Invites (Member)
+# @name get_invites
+GET http://localhost:5000/teams/getInvites/{{memberId}}
+Authorization: Bearer {{authTokenB}}
+
+> {%
+    // Capture the first invite ID if available
+    if (response.body.invites && response.body.invites.length > 0) {
+        client.global.set("inviteId", response.body.invites[0]._id);
+    }
+%}
+
+### Accept Invite (Member)
+POST http://localhost:5000/teams/acceptInvite
+Content-Type: application/json
+Authorization: Bearer {{authTokenB}}
+
+{
+  "inviteId": "{{inviteId}}"
+}
+
+### Reject Invite (Member)
+POST http://localhost:5000/teams/rejectInvite
+Content-Type: application/json
+Authorization: Bearer {{authTokenB}}
+
+{
+  "inviteId": "{{inviteId}}"
 }
