@@ -7,12 +7,13 @@ export interface ISubmission extends Document {
     techStack: string[];
 
     // File Info
-    fileUrl: string;
+    videoUrl: string;
+    figmaUrl?: string;
     githubRepoUrl?: string;
     deploymentUrl?: string;
 
     // Submission Info
-    submittedBy: string; // Team ID, the actual submission can only be done by the team leader.
+    submittedByTeam: string; // Team ID, the actual submission can only be done by the team leader.
     submittedAt: Date;
     status: "pending" | "approved" | "rejected";
 }
@@ -33,7 +34,12 @@ const submissionSchema: Schema = new Schema<ISubmission>({
         required: true
     },
 
-    fileUrl: {
+    figmaUrl: {
+        type: String,
+        required: false
+    },
+
+    videoUrl: {
         type: String,
         required: true
     },
@@ -48,7 +54,7 @@ const submissionSchema: Schema = new Schema<ISubmission>({
         required: false
     },
 
-    submittedBy: {
+    submittedByTeam: {
         type: String,
         required: true
     },
