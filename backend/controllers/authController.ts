@@ -8,6 +8,12 @@ export const signup = async (req: Request, res: Response) => {
     try {
         const { name, email, password, rollNumber, year } = req.body;
 
+        // Verify OTP
+        if (!verifiedEmails.has(email)) {
+            return res.status(400).json({ message: "Please verify OTP before signing up" });
+        }
+        verifiedEmails.delete(email);
+
         // Check if email exists
         const emailExists = await User.findOne({ email });
         if (emailExists) {
@@ -76,3 +82,79 @@ export const login = async (req: Request, res: Response) => {
         res.status(500).json({ message: "Login failed" });
     }
 }
+
+// Email Auth - OTP
+type OtpRecord = { otp: string; expiry: number };
+const otpCache = new Map<string, OtpRecord>();       // email -> { otp, expiry }
+const verifiedEmails = new Set<string>();            // emails that passed OTP
+
+const generateOtp = (): string => {
+    return Math.floor(100000 + Math.random() * 900000).toString(); // 6-digit OTP
+}
+
+export const requestOtp = async (req: Request, res: Response) => {
+
+    try {
+        const { email } = req.body;
+
+        if (!email) {
+            return res.status(400).json({ message: "Email is required" });
+        }
+
+        // Email should not already exist
+        const emailExists = await User.findOne({ email });
+        if (emailExists) {
+            return res.status(400).json({ message: "Email already registered" });
+        }
+
+        // Generate OTP + expiry
+        const otp = generateOtp();
+        const expiry = Date.now() + 10 * 60 * 1000; // 10 minutes
+
+        otpCache.set(email, { otp, expiry });
+
+        // TODO: Later replace 'otp' with actual email sending
+        return res.status(200).json({
+            message: "OTP generated",
+            otp //TODO: frontend shows this during dev
+        });
+
+    } catch (error) {
+        return res.status(500).json({ message: "Failed to generate OTP" });
+    }
+};
+
+export const verifyOtp = async (req: Request, res: Response) => {
+
+    try {
+        const { email, otp } = req.body;
+
+        if (!email || !otp) {
+            return res.status(400).json({ message: "Email and OTP are required" });
+        }
+
+        const record = otpCache.get(email);
+
+        if (!record) {
+            return res.status(400).json({ message: "OTP not requested or expired" });
+        }
+
+        if (Date.now() > record.expiry) {
+            otpCache.delete(email);
+            return res.status(400).json({ message: "OTP expired" });
+        }
+
+        if (record.otp !== otp) {
+            return res.status(400).json({ message: "Invalid OTP" });
+        }
+
+        // Mark email as verified for signup
+        verifiedEmails.add(email);
+        otpCache.delete(email);
+
+        return res.status(200).json({ message: "OTP verified" });
+
+    } catch (error) {
+        return res.status(500).json({ message: "Failed to verify OTP" });
+    }
+};
